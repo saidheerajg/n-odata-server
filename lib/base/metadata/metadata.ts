@@ -20,6 +20,7 @@ export class Metadata {
 	constructor(app) {
 		this._app = app;
 		this._associations = [];
+		this._modelConfig = require("../../../../../server/model-config.json");
 	};
 
 	/**
@@ -34,7 +35,11 @@ export class Metadata {
 		var appModels = this._app.models();  // have to do this because models will not be known in forEach
 
 		this._app.models().forEach((function (model) {
-
+				if (typeof this._modelConfig[model.definition.name] !== "undefined") {
+						if (!this._modelConfig[model.definition.name].public) {
+								return;
+						}
+				}
 				var entityTypeObj:any = {
 					"@Name": model.definition.name
 				};
